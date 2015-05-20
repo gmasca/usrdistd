@@ -1,0 +1,20 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+#FontsizeToolbar_fullZoomReduce
+{
+	list-style-image: url("chrome://fontsize/skin/normal.gif");
+}
+toolbar[iconsize="small"] #FontsizeToolbar_fullZoomReduce
+{
+	list-style-image: url("chrome://fontsize/skin/normal.gif");
+}
+
+
+#FontsizeToolbar_fullZoomReset
+{
+	list-style-image: url("chrome://fontsize/skin/connected.gif");
+}
+toolbar[iconsize="small"] #FontsizeToolbar_fullZoomReset
+{
+	list-style-image: url("chrome://fontsize/skin/connected.gif");
+}
