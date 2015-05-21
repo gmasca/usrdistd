@@ -39,7 +39,7 @@ extern "C" {
     //global variables
     static SOCKET currsock;
     
-    static int _DEBUG = 1; //call setDEBUG(true); to turn ON debug msg
+    static int _DEBUG = 0; //call setDEBUG(true); to turn ON debug msg
     static int _WAIT = STATIC_WAIT_NOTINITIALIZED;
     static fd_set cset;
     static long wtime;

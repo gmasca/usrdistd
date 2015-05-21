@@ -1,9 +1,6 @@
 #include "httpmodule.hpp"
 
 bool Httpmodule::startHttpServer(int port){
-	if(port==0)
-		port=DEFAULT_PORT;
-
 	sock = simple_TCPServer(port, NULL, 10);
 	if(sock>0)
 		return true;
@@ -60,6 +57,6 @@ void Httpmodule::sendResponse(long dist, SOCKET conn){
 }
 
 void Httpmodule::close(){
-	if(sock>0)
-		CloseSOCK(sock);
+	while(1)
+	CloseSOCK(sock);
 }

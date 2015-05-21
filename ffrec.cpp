@@ -1,5 +1,10 @@
 #include "ffrec.hpp"
 
+#define KRED "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYLL "\x1B[33m"
+#define RSET "\x1B[0m"
+
 FFrec::FFrec(string user){
 	username = user;
 	conf_file = user+".conf";
@@ -8,7 +13,7 @@ FFrec::FFrec(string user){
 	
 	ifstream test(conf_file);
 	if(!test.is_open()){
-		cout<<"generating default config file.."<<endl;
+		cout<<"generating default config file... "<<endl;
 		ifstream in("default.conf");
 		ofstream out(conf_file, ios::app);
 		out<<"#####################################"<<endl;
@@ -17,6 +22,7 @@ FFrec::FFrec(string user){
 		out<<in.rdbuf();
 		in.close();
 		out.close();
+		cout<<KGRN<<"[OK]"<<RSET<<endl;
 	}
 	test.close();
 
@@ -28,88 +34,109 @@ FFrec::FFrec(string user){
 
 	setupClassifier();
 	
-	cout<<"ffrec start..."<<endl;
+	cout<<"start... "<<KGRN<<"[OK]"<<RSET<<endl;
+
 	//try to open cam
+	cout<<"cam check... ";
 	try{
 		cap.open(-1);
 	}catch(Exception e){
-		cout<<"impossible to read from webcam... bye"<<endl;
+		cout<<KRED<<"impossible to read from webcam... bye"<<" [ERR]"<<RSET<<endl;
 		exit(60);
 	}
 
 	if(!cap.isOpened()){
-			cout<<"cam not avaible... bye"<<endl;
+			cout<<KRED<<"cam not avaible... bye"<<" [ERR]"<<RSET<<endl;
 			exit(20);
 		}
-	cout<<"cam opened"<<endl;
+	cout<<KGRN<<"[OK]"<<RSET<<endl;
 }
 
 
 bool
 FFrec::setnewTraining(){
+	cout<<"creating a new ff recognizer:"<<endl;
+	cout<<"\tlooking for training dir... ";
 	if(images_folder.empty()){
-		cout<<"the images directory wasn't setted, check in the config file the option 'TRAINING_DIR'"<<endl;
+		cout<<KRED<<"the images directory was not setted, check in the config file the option 'TRAINING_DIR'"<<" [ERR]"<<RSET<<endl;
 		exit(32);
 	}
+	cout<<KGRN<<"[OK]"<<RSET<<endl;
+	
 	vector<Mat> images;
     vector<int> labels;
 
+    cout<<"\tloading images form directory:"<<endl;;
     DIR *dir;
     struct dirent *ent;
     if ((dir = opendir (images_folder.c_str())) != NULL) {
     	int i=0;
     	while ((ent = readdir (dir)) != NULL) {
         	if(strcmp(ent->d_name, ".") && strcmp(ent->d_name, "..")){
-            	cout<<format("readed images %d\r", ++i);
+            	cout<<format("\r\t\treaded images %d", ++i);
             	images.push_back(imread(format("training//%s",ent->d_name), 0));
             	labels.push_back(atoi(ent->d_name));
         	}
     	}
       	closedir (dir);
-      	cout<<endl;
+      	cout<<"... "<<KGRN<<"[OK]"<<RSET<<endl;
 	} else {
-   		cout<<"cannot open the directory... bye"<<endl;
+   		cout<<KRED<<"cannot open the directory... bye"<<" [ERR]"<<RSET<<endl;
    		exit(31);
     }
+	
+    cout<<"creating ff rec model (please wait... could take a while)"<<endl;
+    
+    int pid=fork();
+    if(!pid)
+    	while(1){
+    		cout<<".";
+    		sleep(1);
+    		fflush(stdout);
+    	}
 
-    cout<<"creating model (please wait... could take a while)"<<endl;
     model = createFisherFaceRecognizer();
     model->train(images, labels);
-
-    cout<<"the model was successfull created"<<endl;
     
+	
+	cout<<KGRN<<"[OK]"<<RSET<<endl;
     ffrec_trained=username+".model";
+    cout<<"saving ffrec model ["<<ffrec_trained<<"]"<<endl;
     std::remove(ffrec_trained.c_str());
     model->save(ffrec_trained);
-
+   
     	ifstream testfile(ffrec_trained);
     	if(testfile.is_open()){
-    		cout<<"file "+ffrec_trained+" correctly created"<<endl;
     		testfile.close();
 		 	ofstream configfile(conf_file, ios::app);
 		 	configfile<<"#auto-generated file containing the training data of a specific user"<<endl;
 		 	configfile<<FFREC_LOAD_FILE<<" "<<ffrec_trained<<endl;
 		 	configfile.close();
 		 }
+	    kill(pid, SIGKILL);
+	cout<<KGRN<<"[OK]"<<RSET<<endl<<endl;
     
 return true;	
 }
 
 bool
 FFrec::retrieveTrainingData(){
+	cout<<"loading user's ff recognizer model ["<<ffrec_trained<<"]...";
+	fflush(stdout);
+
 	if(ffrec_trained.empty()){
-		cout<<"no training set was previously created\n in order to use recognition is required to create e new model"<<endl;
+		cout<<KYLL<<"no training set was previously created!\nin order to use recognition is required to create e new model"<<RSET<<endl;
 		FFrec::setnewTraining();
 	}else{
 		try{
 			model = createFisherFaceRecognizer();
 			model->load(ffrec_trained);
 		}catch(Exception e){
-			cout<<"something appen loading the model.. bye"<<endl;
+			cout<<KRED<<"something appen loading the model... bye"<<" [ERR]"<<RSET<<endl;
 			exit(40);
 		}
 
-		cout<<"ffrec model loaded..."<<endl;
+	cout<<KGRN<<"[OK]"<<RSET<<endl;
 	}
 
 return true;
@@ -119,8 +146,10 @@ void
 FFrec::readConfigFile(string configfile){
 	ifstream conf(configfile);
 
+	cout<<"reading of config file ["<<configfile<<"]... ";
+	
 	if(!conf.is_open()){
-		cout<<configfile + " doesn't exist or cannot be accessed... bye"<<endl;
+		cout<<KRED<<configfile + " doesn't exist or cannot be accessed... bye"<<" [ERR]"<<RSET<<endl;
 		exit(30);
 	}
 
@@ -143,7 +172,7 @@ FFrec::readConfigFile(string configfile){
 	}
 
 	conf.close();
-	cout<<"config file readed"<<endl;
+	cout<<KGRN<<"[OK]"<<RSET<<endl;
 }
 
 bool
@@ -152,7 +181,7 @@ FFrec::getFrame(){
 		cap.open(-1);
 	
 	}catch(Exception e){
-		cout<<"impossible to read from webcam... bye"<<endl;
+		cout<<KRED<<"impossible to read from webcam... bye"<<" [ERR]"<<RSET<<endl;
 		exit(60);
 	}
 	cap>>frame;
@@ -172,14 +201,15 @@ return true;
 
 bool
 FFrec::setupClassifier(){
+	cout<<"loading classifier ["<<haar_file<<"]... ";
 	if(haar_file.empty()){
-		cout<<"no haar classifier fire was setted... bye"<<endl;
+		cout<<KRED<<"no haar classifier fire was setted... bye"<<" [ERR]"<<RSET<<endl;
 		exit(32);
 	}
 	
 	ifstream file(haar_file);
 	if(!file.is_open()){
-		cout<<haar_file + " doesn't exist or cannot be accessed... bye"<<endl;
+		cout<<KRED<<haar_file + " does not exist or cannot be accessed... bye"<<" [ERR]"<<RSET<<endl;
 		exit(33);
 	}
 	file.close();
@@ -188,9 +218,10 @@ FFrec::setupClassifier(){
 		haar_cascade.load(haar_file);
 	//	cout<<"feature type:" << haar_cascade.getFeatureType()<<endl;
 	}catch(Exception e){
-		cout<<"something happen during classifier loading... bye"<<endl;
+		cout<<KRED<<"something happen during classifier loading... bye"<<" [ERR]"<<RSET<<endl;
 		exit(21);
 	}
+	cout<<KGRN<<"[OK]"<<RSET<<endl;
 }
 
 bool
@@ -295,3 +326,4 @@ FFrec::show(){
 	
 return true;
 }
+

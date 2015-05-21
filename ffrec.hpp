@@ -1,7 +1,9 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/opencv.hpp"
-#include "dirent.h"
-#include "stdio.h"
+#include <dirent.h>
+#include <signal.h>
+#include <unistd.h>
+#include <cstdio>
 #include <iostream>
 #include <fstream>
 #include <string>
