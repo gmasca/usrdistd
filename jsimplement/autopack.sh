@@ -1,14 +1,12 @@
 #!/bin/bash
 
-if [ $# -lt 1 ]; then
-	echo "inserisci il nome dell'output"
-	exit -1
-fi
+name=pack.xpi
 
 rm -f *.xpi
+rm -f extention/*.zip
 cd extention
-zip -r ${1} *
+zip -r pack.xpi *
 cd ..
-mv extention/${1} .
-firefox ${1} &
+mv extention/pack.xpi .
+firefox pack.xpi &
 exit 0

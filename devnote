@@ -1,0 +1,2 @@
+BUGS:
+	usrdistd - will close when the browser chrash during a loop

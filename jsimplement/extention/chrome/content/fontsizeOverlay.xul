@@ -9,20 +9,12 @@
 	<script type="application/x-javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	
 	<toolbarpalette id="BrowserToolbarPalette">
-
-		<toolbarbutton
-			id="FontsizeToolbar_fullZoomReduce"
-			label="Fontsize - &fullZoomReduceCmd.label;"
-			class="toolbarbutton-1"
-			tooltiptext="Fontsize - &fullZoomReduceCmd.label;"
-			oncommand="FontSize_Extension.getDistance();"/>
-
 		<toolbarbutton
 			id="FontsizeToolbar_fullZoomReset"
 			label="Fontsize - &fullZoomResetCmd.label;"
 			class="toolbarbutton-1"
 			tooltiptext="Fontsize - &fullZoomResetCmd.label;"
-			oncommand="FontSize_Extension.reset();"/>
+			oncommand="FontSize_Extension.start();"/>
 
 	</toolbarpalette>
 

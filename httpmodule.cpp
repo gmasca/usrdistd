@@ -1,5 +1,7 @@
 #include "httpmodule.hpp"
 
+#define patt "%3CReq%20"
+
 bool Httpmodule::startHttpServer(int port){
 	sock = simple_TCPServer(port, NULL, 10);
 	if(sock>0)
@@ -12,27 +14,32 @@ SOCKET Httpmodule::waitConnection(){
 	return Accept(sock, &nextcli, sizeof(nextcli));
 }
 
-void Httpmodule::waitRequest(SOCKET conn){
+int Httpmodule::waitRequest(SOCKET conn){
 	char buf[MAXSTR];
-	
+	int token;
+	bzero(buf, MAXSTR);
 	while(1){
 		if(RecvString(conn, buf,MAXSTR)<=0){
 			CloseSOCK(conn);
-			return;
+			return -36;
 		}
-		printf("%s", buf);
+
+		if(!searchPatt(buf,patt,3))
+			token=stripMSG(buf);
 		
-		if(buf[0]=='\r' || buf[0]=='\n' || buf[0]=='\0') break;
+		if(buf[0]=='\r'||buf[0]=='\n'||buf[0]=='\0') break;
 		
 		bzero(buf, MAXSTR);
 	}
+	return token;
 }
 
-void Httpmodule::sendResponse(long dist, SOCKET conn){
+void Httpmodule::sendResponse(int token, long dist, SOCKET conn){
 	char message[MAXSTR];
-	sprintf(message, "%ld", dist);
-	strAddHead(message, XML_TAG_O, MAXSTR);
-	strAddTail(message, XML_TAG_C, MAXSTR);
+	sprintf(message, XML_MSG, token, dist);
+//	sprintf(message, "%ld", dist);
+//	strAddHead(message, XML_TAG_O, MAXSTR);
+//	strAddTail(message, XML_TAG_C, MAXSTR);
 
 	char lenghtheader[100];
 	sprintf(lenghtheader, "Content-Length: %d\n", strlen(message));
@@ -57,6 +64,15 @@ void Httpmodule::sendResponse(long dist, SOCKET conn){
 }
 
 void Httpmodule::close(){
-	while(1)
 	CloseSOCK(sock);
 }
+
+int Httpmodule::stripMSG(char* msg){
+	strClean(msg, MAXSTR);
+	strRemHead(msg, "GET /?");
+	strRemHead(msg, "msg");
+	strRemHead(msg, "=%3CReq%20token=");
+	strRemTail(msg, "/%3E HTTP/1.1");
+	return atoi(msg);
+}
+

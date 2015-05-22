@@ -4,8 +4,12 @@
 #define MAXSTR 600
 #define CHUNKSIZE 512
 
-#define XML_TAG_O "<distance>"
-#define XML_TAG_C "</distance>"
+#define XML_MSG "\
+<Resp token='%d'>\
+<distance>%ld\
+</distance>\
+</Resp>"
+
 #define DEFAULT_PORT 9600
 
 class Httpmodule{
@@ -16,7 +20,8 @@ class Httpmodule{
 	public:
 		bool startHttpServer(int port);
 		SOCKET waitConnection();
-		void waitRequest(SOCKET conn);
-		void sendResponse(long dist, SOCKET conn);
+		int waitRequest(SOCKET conn);
+		void sendResponse(int token, long dist, SOCKET conn);
+		int stripMSG(char* msg);
 		void close();
 };

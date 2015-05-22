@@ -338,6 +338,9 @@ int Listen(SOCKET sock, unsigned int queuelen) {
 
 int Bind(SOCKET sock, ADDRIN* addr) {
     int ret=-1;
+    int opt=1;
+    setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(int));
+
     if(sock==0)
        ret = bind(currsock, (ADDR*) addr, sizeof (ADDRIN));
     else
@@ -387,8 +390,7 @@ SOCKET simple_TCPServer(int port, char* addr, int queuelen){
     ADDRIN saddr;
     SOCKET fd = CreateSocketTCP();
     setCurrSOCK(fd);
-    setADDRIN(&saddr, AF_INET, port, addr);
-    printf("DEBUG\n");
+    setADDRIN(&saddr, AF_INET, port, addr);    
     Bind(fd, &saddr);
     Listen(fd, queuelen);
     return fd;

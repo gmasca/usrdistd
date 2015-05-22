@@ -10,6 +10,8 @@
 #include <regex>
 
 #define VGA Size(640,480)
+#define VGA_w 640
+#define VGA_h 480
 #define QVGA Size(320, 240)
 
 #define TRAINING_DIR "TRAINING_DIR"

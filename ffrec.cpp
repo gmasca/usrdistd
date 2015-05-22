@@ -38,6 +38,7 @@ FFrec::FFrec(string user){
 
 	//try to open cam
 	cout<<"cam check... ";
+	cap.set(CV_CAP_PROP_FPS, 1);
 	try{
 		cap.open(-1);
 	}catch(Exception e){
@@ -49,7 +50,13 @@ FFrec::FFrec(string user){
 			cout<<KRED<<"cam not avaible... bye"<<" [ERR]"<<RSET<<endl;
 			exit(20);
 		}
+
+	cap.set(CV_CAP_PROP_FPS, 15);
+	cap.set(CV_CAP_PROP_FRAME_WIDTH, VGA_w);
+	cap.set(CV_CAP_PROP_FRAME_HEIGHT, VGA_h);
+	
 	cout<<KGRN<<"[OK]"<<RSET<<endl;
+	cap.release();
 }
 
 
@@ -98,7 +105,6 @@ FFrec::setnewTraining(){
     model = createFisherFaceRecognizer();
     model->train(images, labels);
     
-	
 	cout<<KGRN<<"[OK]"<<RSET<<endl;
     ffrec_trained=username+".model";
     cout<<"saving ffrec model ["<<ffrec_trained<<"]"<<endl;
@@ -179,23 +185,20 @@ bool
 FFrec::getFrame(){
 	try{
 		cap.open(-1);
-	
 	}catch(Exception e){
 		cout<<KRED<<"impossible to read from webcam... bye"<<" [ERR]"<<RSET<<endl;
 		exit(60);
 	}
 	cap>>frame;
 	cap>>frame;
-	cap>>frame;
-	cap>>frame;
-	cap>>frame;
-	cap>>frame;
-	cap>>frame;
-	cap>>frame;
-	resize(frame, frame, VGA, 0,0);
-	cout<<"new frame"<<endl;
-	cap.release();
- 
+//	cap>>frame;
+//	cap>>frame;
+//	cap>>frame;
+//	cap>>frame;
+//	cap>>frame;
+//	cap>>frame;
+//	resize(frame, frame, VGA, 0,0);
+//	cap.release(); 
 return true;
 }
 
@@ -262,6 +265,7 @@ FFrec::findRecogFace(){
     resize(current, resized, QVGA, 1.0, 1.0, INTER_CUBIC);
     int prediction = model->predict(resized);
     rectangle(frame, faces[maxface], CV_RGB(0, 255,0), 1);
+
     cout<<"rect distance: "<<faces[maxface].width<<endl;
 	p_width = faces[maxface].width;
 }
@@ -276,7 +280,7 @@ FFrec::findFace(){
     //search for the biggest one
     long maxarea=0;
     long area=0;
-    int maxface = -1;
+    int maxface=-1;
 
     for(int i=0; i<faces.size(); i++){
     	area=(faces[i].width*faces[i].height);
@@ -292,18 +296,20 @@ FFrec::findFace(){
     else
     	return false;
     
+    cout<<"\t[face]"<<endl;
     Mat resized;
     resize(current, resized, QVGA, 1.0, 1.0, INTER_CUBIC);
     //int prediction = model->predict(resized);
     rectangle(frame, faces[maxface], CV_RGB(0, 255,0), 1);
-    cout<<"rect distance: "<<faces[maxface].width<<endl;
+       
+    cout<<"\t[width: "<<faces[maxface].width<<"]"<<endl;
 	p_width = faces[maxface].width;
 }
 
 long
 FFrec::getEyesDistance(){
 	l_dist = (long)((-50*(p_width)+21550)/186);
-	cout<<"distance: "<<l_dist<<" cm"<<endl;
+	cout<<"\t[distance: "<<l_dist<<" cm]"<<endl;
 	return l_dist;
 }
 
@@ -317,7 +323,7 @@ FFrec::show(){
 	 		this->getEyesDistance();
 	 	}else{
 	 		l_dist=0;
-	 		cout<<"no face detected"<<endl;
+	 		cout<<"\t[no face]"<<endl;
 	 	}
 
 	 	imshow("img", frame);

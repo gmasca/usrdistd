@@ -7,15 +7,15 @@
     <em:id>fontsize@firefox.clarisblue.com</em:id>
     <em:type>2</em:type>
     <em:name>Font Size</em:name>
-    <em:version>0.1.20100123.1</em:version>
-    <em:description>Enlarge/Reduce the font size.</em:description>
+    <em:version>0.1</em:version>
+    <em:description>Enlarge/Reduce the browser zoom respect the user position.</em:description>
     <em:creator>cb@clarisblue.com</em:creator>
     <em:iconURL>chrome://fontsize/skin/fontsize.gif</em:iconURL>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
         <em:minVersion>3.0</em:minVersion>
-        <em:maxVersion>3.8.*</em:maxVersion>
+        <em:maxVersion>*</em:maxVersion>
       </Description>
     </em:targetApplication>
   </Description>

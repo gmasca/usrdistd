@@ -70,20 +70,23 @@ if(test) f->show();
 /***************************************************************/
    
 /********************* HTTP SERVER *****************************/
+ int token;
  httpm.startHttpServer(port);
  cout<<"waiting on port "<< port << endl;
-	while(1){
+ 	while(1){
 		conn = httpm.waitConnection();
-		httpm.waitRequest(conn);
-
+		token=httpm.waitRequest(conn);
+		cout<<"->[new req: "<<token<<"]"<<endl;
+		cout<<"\t[analysis...]"<<endl;
 		f->getFrame();
 
 		if(f->find()){
-			httpm.sendResponse(f->getEyesDistance(), conn); 
+			httpm.sendResponse(++token, f->getEyesDistance(), conn); 
 		}else{
-     			httpm.sendResponse(0, conn); //no face detected
-     			cout<<"no face detected"<<endl;
+			httpm.sendResponse(++token, 0, conn); //no face detected
+ 			cout<<"\t[no face]"<<endl;
 	     	}
+     	cout<<"<-[send resp: "<< token <<"]"<<endl;
      	}
 /**************************************************************/
 
