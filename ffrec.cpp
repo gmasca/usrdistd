@@ -5,12 +5,20 @@
 #define KYLL "\x1B[33m"
 #define RSET "\x1B[0m"
 
-FFrec::FFrec(string user){
+FFrec::FFrec(string user, int mode){
 	username = user;
 	conf_file = user+".conf";
 
 	use_recognition=false;
 	
+	FFrec::mode=mode;
+	cout<<"mode: ";
+	if(mode==MOD_VIDEO)
+		cout<<KYLL<<"video_mode"<<RSET<<endl;
+	else
+		cout<<KYLL<<"frame_mode"<<RSET<<endl;
+
+
 	ifstream test(conf_file);
 	if(!test.is_open()){
 		cout<<"generating default config file... "<<endl;
@@ -51,7 +59,7 @@ FFrec::FFrec(string user){
 			exit(20);
 		}
 
-	cap.set(CV_CAP_PROP_FPS, 15);
+	cap.set(CV_CAP_PROP_FPS, 30);
 	cap.set(CV_CAP_PROP_FRAME_WIDTH, VGA_w);
 	cap.set(CV_CAP_PROP_FRAME_HEIGHT, VGA_h);
 	
@@ -189,16 +197,18 @@ FFrec::getFrame(){
 		cout<<KRED<<"impossible to read from webcam... bye"<<" [ERR]"<<RSET<<endl;
 		exit(60);
 	}
+
+cap>>frame;
+cap>>frame;
+
+	
+if(!mode){
 	cap>>frame;
 	cap>>frame;
-//	cap>>frame;
-//	cap>>frame;
-//	cap>>frame;
-//	cap>>frame;
-//	cap>>frame;
-//	cap>>frame;
-//	resize(frame, frame, VGA, 0,0);
-//	cap.release(); 
+	cap>>frame;
+	cap.release();
+}
+	
 return true;
 }
 

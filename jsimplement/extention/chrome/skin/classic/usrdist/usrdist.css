@@ -1,0 +1,11 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+/*#UsrDist_Start
+{
+	list-style-image: url("chrome://usrdist/skin/normal.gif");
+}
+toolbar[iconsize="small"] #UsrDist_Toolbar_Start
+{
+	list-style-image: url("chrome://usrdist/skin/normal.gif");
+}
+*/

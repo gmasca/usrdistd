@@ -4,13 +4,13 @@
   xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
   <Description about="urn:mozilla:install-manifest">
-    <em:id>fontsize@firefox.clarisblue.com</em:id>
+    <em:id>usrdist@firefox.clarisblue.com</em:id>
     <em:type>2</em:type>
-    <em:name>Font Size</em:name>
+    <em:name>UsrDist</em:name>
     <em:version>0.1</em:version>
     <em:description>Enlarge/Reduce the browser zoom respect the user position.</em:description>
-    <em:creator>cb@clarisblue.com</em:creator>
-    <em:iconURL>chrome://fontsize/skin/fontsize.gif</em:iconURL>
+    <em:creator>mascari.giovanni@polito.it</em:creator>
+    <em:iconURL>chrome://fontsize/skin/normal.gif</em:iconURL>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>

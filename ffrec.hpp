@@ -18,7 +18,8 @@
 #define HAAR_CASCADE_FILE "HAAR_CASCADE_FILE"
 #define FFREC_LOAD_FILE "FFREC_TRAINED_FILE"
 #define USE_RECOGNITION "USE_RECOGNITION"
-
+#define MOD_VIDEO 1
+#define MOD_FRAME 0
 
 using namespace std;
 using namespace cv;
@@ -41,11 +42,12 @@ class FFrec{
 		VideoCapture cap;
 		Mat frame;
 
+		int mode;
 		int p_width;
 		long l_dist;
 
 	public:
-		FFrec(string conf);
+		FFrec(string conf, int mode);
 
 		void readConfigFile(string conf); //ok
 

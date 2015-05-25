@@ -5,7 +5,7 @@ var timer=2000;
 var timeout=timer+500;
 var wait=0;
 
-var FontSize_Extension = {
+var UsrDist = {
 getDistance: function()
 {	
 	xmlHttp = new XMLHttpRequest();
@@ -15,8 +15,9 @@ getDistance: function()
 
 	xmlHttp.ontimeout=function()
 	{	
-		timer=timer+500;
-		timeout=timeout+500;
+		//timer=timer+500;
+		//timeout=timeout+500;
+		document.getElementById('UsrDist_Start').setAttribute('image','chrome://usrdist/skin/off.gif');
 	}
 	
 	xmlHttp.onload=function()
@@ -58,17 +59,17 @@ getDistance: function()
 
 start: function()
 {	
+	document.getElementById('UsrDist_Start').setAttribute('image','chrome://usrdist/skin/normal.gif');
+
 	if(token!=0){
 		clearInterval(loop);
 		token=0;
+		document.getElementById('UsrDist_Start').setAttribute('image','chrome://usrdist/skin/normal.gif');
 	}else{
+		document.getElementById('UsrDist_Start').setAttribute('image','chrome://usrdist/skin/on.gif');
 		token=0;
-		loop=setInterval(FontSize_Extension.getDistance, timer);
+		loop=setInterval(UsrDist.getDistance, timer);	
+		
 	}
 }
-
-//stop: function()
-//{
-//	clearInterval(loop);
-//}
 }

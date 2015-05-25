@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0"?>
-<?xml-stylesheet href="chrome://fontsize/skin/fontsize.css" type="text/css"?>
+<?xml-stylesheet href="chrome://usrdist/skin/usrdist.css" type="text/css"?>
 <!DOCTYPE window SYSTEM "chrome://browser/locale/browser.dtd">
 <overlay
-	id="FontsizeOverlay"
+	id="UsrDistOverlay"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-	<script type="application/x-javascript" src="chrome://fontsize/content/fontsizeOverlay.js"></script>
+	<script type="application/x-javascript" src="chrome://usrdist/content/usrdistOverlay.js"></script>
 	<script type="application/x-javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	
 	<toolbarpalette id="BrowserToolbarPalette">
 		<toolbarbutton
-			id="FontsizeToolbar_fullZoomReset"
-			label="Fontsize - &fullZoomResetCmd.label;"
+			id="UsrDist_Start"
+			label="UsrDist - start"
 			class="toolbarbutton-1"
-			tooltiptext="Fontsize - &fullZoomResetCmd.label;"
-			oncommand="FontSize_Extension.start();"/>
-
+			image="chrome://usrdist/skin/normal.gif"
+			tooltiptext="UsrDist - start"
+			oncommand="UsrDist.start();"/>
 	</toolbarpalette>
 
 </overlay>
